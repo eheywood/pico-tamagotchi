@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 
 # Change your executable name to something creative!
-set(NAME pico-boilerplate) # <-- Name your project/executable here!
+set(NAME pico-tamagotchi) # <-- Name your project/executable here!
 
 include(pimoroni_pico_import.cmake)
 include(pico_sdk_import.cmake)
@@ -28,6 +28,7 @@ include(libraries/bitmap_fonts/bitmap_fonts)
 include(libraries/pico_display/pico_display)
 include(libraries/pico_graphics/pico_graphics)
 include(drivers/st7789/st7789)
+include(drivers/button/button)
 
 # Don't forget to link the libraries you need!
 target_link_libraries(${NAME}
@@ -36,7 +37,8 @@ target_link_libraries(${NAME}
         hardware_pwm 
         hardware_dma 
         pico_display 
-        pico_graphics 
+        pico_graphics
+        button 
         st7789)
 
 

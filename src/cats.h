@@ -1,3 +1,5 @@
+//File to store all the 8bit sprites used in the animations
+
 #define TRANSP 0
 #define ORANGE 1
 #define BROWN 2

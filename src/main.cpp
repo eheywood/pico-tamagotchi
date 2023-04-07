@@ -59,6 +59,11 @@ int main() {
     }
 }
 
+void draw_states_bars(){
+    // Draw the levels of happiness, hunger and cleanliness to the pico-display:
+
+}
+
 void animation_play(){
     draw_from_arr(stand_cat_1,8,0,0);
     draw_from_arr(yarn_1,3,19,24);
@@ -108,6 +113,7 @@ void animation_stand(){
 }
 
 void animation_sat(){
+    
     draw_from_arr(sat_cat_1,8,0,0);
     clear_animation();
 
@@ -137,6 +143,9 @@ void animation_bath(){
     clear_animation();
 }
 
+/**
+ * Implements a time delay between frames and updates the display
+*/
 void clear_animation(){
     draw_states_bars();
     st7789.update(&graphics);
@@ -145,6 +154,9 @@ void clear_animation(){
     graphics.clear();
 }
 
+/**
+ * Draws an 8x8 sprite to the left 150x135 pixels 
+*/
 void draw_from_arr(unsigned int* arr,int size, int xoffset,int yoffset){
 
     int x = round(150 / 2.0f) - (size*4) + (xoffset * size);
@@ -184,34 +196,6 @@ void draw_from_arr(unsigned int* arr,int size, int xoffset,int yoffset){
 
         }
     }
-}
-
-
-void draw_states_bars(){
-    float lineLength = 70.0f;
-    graphics.set_pen(255,255,255);
-    graphics.thick_line(Point(160,10),Point(160+lineLength,10),3);
-    graphics.thick_line(Point(160,25),Point(160+lineLength,25),3);
-    graphics.thick_line(Point(160,40),Point(160+lineLength,40),3);
-
-    //happiness
-    int hap_length = round(lineLength * (happiness/100.0f));
-    graphics.set_pen(255, 51, 153);
-    graphics.text("happiness",Point(160,0),10,1.25F,0.0F,1);
-    graphics.thick_line(Point(160,10),Point(160+hap_length,10),3);
-
-    //hunger
-    int hung_length = round(lineLength * (hunger/100.0f));
-    graphics.set_pen(255, 128, 0);
-    graphics.text("hunger",Point(160,15),10,1.25F,0.0F,1);
-    graphics.thick_line(Point(160,25),Point(160+hung_length,25),3);
-
-    //cleanliness
-    int clean_length = round(lineLength * (cleanliness/100.0f));
-    graphics.set_pen(51, 153, 255);
-    graphics.text("cleanliness",Point(160,30),10,1.25F,0.0F,1);
-    graphics.thick_line(Point(160,40),Point(160+clean_length,40),3);
-
 }
 
 
@@ -269,13 +253,13 @@ void poll_buttons_irq(){
     } 
 
     if(button_x.raw() && !button_x_prev){
-         if((hunger + 30) > 100){
+        if((hunger + 30) > 100){
             hunger = 100;
         }else{
             hunger += 30;
         }
         cat_state = FEEDING;
-        button_b_prev = true;     
+        button_x_prev = true;     
     } 
 
     if(button_a_prev && !button_a.raw()){

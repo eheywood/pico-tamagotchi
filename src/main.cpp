@@ -19,12 +19,19 @@ Pen PEN_ORANGE = graphics.create_pen(255,153,51);
 Pen PEN_BROWN = graphics.create_pen(101,57,13);
 Pen PEN_CREAM = graphics.create_pen(252,235,203);
 Pen PEN_GREEN = graphics.create_pen(178,255,102);
+Pen PEN_GREY = graphics.create_pen(192,192,192);
+Pen PEN_L_BLUE = graphics.create_pen(153,255,255);
+Pen PEN_M_BLUE = graphics.create_pen(102,178,255);
+Pen PEN_D_BLUE = graphics.create_pen(0,128,255);
+
 
 int main() {
     
     happiness = 100;
     cleanliness = 100;
     hunger = 100;
+
+    cat_state = NORMAL;
     
     //Core 1:
     /* Polling buttons on an internal timer */
@@ -36,48 +43,112 @@ int main() {
         graphics.set_pen(0,0,0);
         graphics.clear();
 
-        
-        animation_normal();
+        if(cat_state == NORMAL){
+            animation_stand();
+        }else if(cat_state == FEEDING){
+            animation_feed();
+            cat_state = NORMAL;
+        }else if(cat_state == PLAYING){
+            animation_play();
+            cat_state = NORMAL;
+        }else if(cat_state == CLEANING){
+            animation_bath();
+            cat_state = NORMAL;
+        }
     
     }
 }
 
-void animation_normal(){
-    draw_from_arr(cat_1);
-    draw_states_bars();
-    st7789.update(&graphics);
-    sleep_ms(500);
-    graphics.set_pen(0,0,0);
-    graphics.clear();
+void animation_play(){
+    draw_from_arr(stand_cat_1,8,0,0);
+    draw_from_arr(yarn_1,3,19,24);
+    clear_animation();
 
-    draw_from_arr(cat_2);
-    draw_states_bars();
-    st7789.update(&graphics);
-    sleep_ms(500);
-    graphics.set_pen(0,0,0);
-    graphics.clear();
+    draw_from_arr(cat_arm,8,0,0);
+    draw_from_arr(yarn_2,3,19,24);
+    clear_animation();
 
-    draw_from_arr(cat_3);
-    draw_states_bars();
-    st7789.update(&graphics);
-    sleep_ms(500);
-    graphics.set_pen(0,0,0);
-    graphics.clear();
+    draw_from_arr(stand_cat_3,8,0,0);
+    draw_from_arr(yarn_3,3,19,24);
+    clear_animation();
 
-    draw_from_arr(cat_2);
-    draw_states_bars();
-    st7789.update(&graphics);
-    sleep_ms(500);
-    graphics.set_pen(0,0,0);
-    graphics.clear();
-
+    draw_from_arr(cat_arm,8,0,0);
+    draw_from_arr(yarn_4,3,19,24);
+    clear_animation();
 }
 
-void draw_from_arr(unsigned int* arr){
-    int size = 8;
+void animation_feed(){
+    draw_from_arr(sat_cat_1,8,0,0);
+    draw_from_arr(cat_food_1,4,15,16);
+    clear_animation();
 
-    int x = round(150 / 2.0f) - (size*4);
-    int y = round(135 / 2.0f) - (size*4);
+    draw_from_arr(sat_cat_2,8,0,0);
+    draw_from_arr(cat_food_2,4,15,16);
+    clear_animation();
+
+    draw_from_arr(sat_cat_1,8,0,0);
+    draw_from_arr(cat_food_3,4,15,16);
+    clear_animation();
+}
+
+void animation_stand(){
+    draw_from_arr(stand_cat_1,8,0,0);
+    clear_animation();
+
+    draw_from_arr(stand_cat_2,8,0,0);
+    clear_animation();
+
+
+    draw_from_arr(stand_cat_3,8,0,0);
+    clear_animation();
+
+
+    draw_from_arr(stand_cat_2,8,0,0);
+    clear_animation();
+}
+
+void animation_sat(){
+    draw_from_arr(sat_cat_1,8,0,0);
+    clear_animation();
+
+    draw_from_arr(sat_cat_2,8,0,0);
+    clear_animation();
+
+
+    draw_from_arr(sat_cat_3,8,0,0);
+    clear_animation();
+
+
+    draw_from_arr(sat_cat_2,8,0,0);
+    clear_animation();
+}
+
+void animation_bath(){
+    draw_from_arr(bath_cat_1,8,0,0);
+    clear_animation();
+
+    draw_from_arr(bath_cat_2,8,0,0);
+    clear_animation();
+
+    draw_from_arr(bath_cat_3,8,0,0);
+    clear_animation();
+
+    draw_from_arr(bath_cat_2,8,0,0);
+    clear_animation();
+}
+
+void clear_animation(){
+    draw_states_bars();
+    st7789.update(&graphics);
+    sleep_ms(500);
+    graphics.set_pen(0,0,0);
+    graphics.clear();
+}
+
+void draw_from_arr(unsigned int* arr,int size, int xoffset,int yoffset){
+
+    int x = round(150 / 2.0f) - (size*4) + (xoffset * size);
+    int y = round(135 / 2.0f) - (size*4) + (yoffset);
 
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
@@ -93,6 +164,18 @@ void draw_from_arr(unsigned int* arr){
                     break;
                 case GREEN:
                     graphics.set_pen(PEN_GREEN);
+                    break;
+                case L_BLUE:
+                    graphics.set_pen(PEN_L_BLUE);
+                    break;
+                case M_BLUE:
+                    graphics.set_pen(PEN_M_BLUE);
+                    break;
+                case D_BLUE:
+                    graphics.set_pen(PEN_D_BLUE);
+                    break;    
+                case GREY:
+                    graphics.set_pen(PEN_GREY);
                     break;
                 case TRANSP:
                     continue;
@@ -172,6 +255,7 @@ void poll_buttons_irq(){
         }else{
             happiness += 30;
         }
+        cat_state = PLAYING;
         button_a_prev = true;    
     } 
     if(button_b.raw() && !button_b_prev){
@@ -180,12 +264,18 @@ void poll_buttons_irq(){
         }else{
             cleanliness += 30;
         }
+        cat_state = CLEANING;
         button_b_prev = true;    
     } 
 
     if(button_x.raw() && !button_x_prev){
-        hunger += 30;
-        button_x_prev = true;    
+         if((hunger + 30) > 100){
+            hunger = 100;
+        }else{
+            hunger += 30;
+        }
+        cat_state = FEEDING;
+        button_b_prev = true;     
     } 
 
     if(button_a_prev && !button_a.raw()){
@@ -198,9 +288,9 @@ void poll_buttons_irq(){
         button_x_prev = false;
     }
 
-    //if(button_y.raw()) y_coord += 1;
-
-    if(state_decline_counter == (100)){
+    
+    //Decreases the cleanliness, happiness and hunger of the pet every 5 seconds
+    if(state_decline_counter == (100 * 5)){
         state_decline();
         state_decline_counter = 0;
     }else{

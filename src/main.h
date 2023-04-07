@@ -15,6 +15,14 @@ static volatile int hunger;
 static volatile int happiness;
 static volatile int cleanliness;
 
+//CAT STATES
+#define NORMAL 0
+#define FEEDING 1
+#define CLEANING 2
+#define PLAYING 3
+
+static volatile int cat_state;
+
 //For the internal timer interrupt for the button polling
 #define BUTTON_ALARM 0
 #define BUTTON_IRQ TIMER_IRQ_0
@@ -27,9 +35,15 @@ bool button_b_prev;
 bool button_x_prev;
 
 void draw_states_bars();
-void draw_from_arr(unsigned int* arr);
+void draw_from_arr(unsigned int* arr, int size,int xoffset,int yoffset);
 void draw_incr_pixel(int size,int x,int y);
-void animation_normal();
+void animation_sat();
+void animation_stand();
+void animation_feed();
+void animation_play();
+void animation_bath();
+void clear_animation();
+
 
 void core1_entry();
 static void button_poll_alarm(uint32_t delay);
